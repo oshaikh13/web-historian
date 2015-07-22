@@ -7,6 +7,6 @@ var fs = require('fs');
 exports.handleRequest = function (req, res) {
   var reqUrl = req.url;
 
-  httpHelp.serveAssets(res, req, "../web/public/");
+  httpHelp.serveAssets(res, req, archive.paths.siteAssets);
 
 };
