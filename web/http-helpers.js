@@ -10,10 +10,38 @@ exports.headers = headers = {
   'Content-Type': "text/html"
 };
 
-exports.serveAssets = function(res, asset, callback) {
+exports.serveAssets = function(res, req, asset, callback) {
   // Write some code here that helps serve up your static files!
   // (Static files are things like html (yours or archived from others...),
   // css, or anything that doesn't change often.)
+
+  var mimeTypes = {
+    '.js' : 'text/javascript',
+    '.html': 'text/html',
+    '.css' : 'text/css'
+  };
+
+  var lookup = path.basename(decodeURI(req.url)) || 'index.html';
+  console.log(req.url);
+  var f = asset + lookup;
+  console.log(f);
+  fs.exists(f, function (exists) {
+    if (exists) {
+      fs.readFile(f, function (err, data) {
+        if (err) {res.writeHead(500); res.end('Server Error!'); return; }
+        var headers = {'Content-type': mimeTypes[path.extname(lookup)]};
+        res.writeHead(200, headers);
+        res.end(data);
+      });
+      return;
+    }
+    res.writeHead(404); //no such file found!
+    res.end();
+  });
+
+
+
+
 };
 
 
