@@ -22,9 +22,7 @@ exports.serveAssets = function(res, req, asset, callback) {
   };
 
   var lookup = path.basename(decodeURI(req.url)) || 'index.html';
-  console.log(req.url);
   var f = asset + lookup;
-  console.log(f);
   fs.exists(f, function (exists) {
     if (exists) {
       fs.readFile(f, function (err, data) {
