@@ -2,11 +2,51 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="styles.css" />
+
+  <!-- Dependecies -->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 </head>
 <body>
   Enter a URL here:
-  <form method="POST">
-    <input type="input" name="url"></input>
+  <form class="urlForm">
+    <input class="urlName" type="input" name="url"></input>
   </form>
+
+  <script type="text/javascript">
+    $('.urlForm').keypress(function (e) {
+      if (e.which == 13) {
+        var url = $('.urlName').val();
+
+        console.log(url);
+
+        $.ajax({
+          method: "POST",
+          url: "/",
+          data: {
+            urlRequest: url
+          },
+
+          statusCode: {
+            404: function(){
+              alert('file not found');
+            },
+            302: function(){
+              alert('URL REDIERECT');
+            }
+          },
+
+          success: function(){
+            console.log('ajax complete')
+          }
+        });
+
+
+
+
+        $('.urlName').val('');
+        return false;    //<---- Add this line
+      }
+    });
+  </script>
 </body>
 </html>

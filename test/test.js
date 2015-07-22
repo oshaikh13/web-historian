@@ -115,6 +115,12 @@ describe("archive helpers", function(){
           done();
         });
       });
+
+      // archive.isUrlInList("example1.com", function(is) {
+      //   console.log(is);
+      //   expect(!is);
+      //   done();
+      // })
     });
   });
 

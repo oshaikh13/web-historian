@@ -7,6 +7,45 @@ var fs = require('fs');
 exports.handleRequest = function (req, res) {
   var reqUrl = req.url;
 
-  httpHelp.serveAssets(res, req, archive.paths.siteAssets);
+  if (req.method === "GET") {
+    httpHelp.serveAssets(res, req, archive.paths.siteAssets);
+  } else if (req.method === "POST") {
+
+    var body = "";
+    req.on("data", function(buffer){
+      body += buffer;
+    })
+
+    req.on("end", function(){
+
+      var statusCode = 201;
+
+      body = JSON.parse(body);
+
+      archive.isUrlInList(body["url"], function(UrlExists){
+        if (!UrlExists){
+          statusCode = 302;
+        }
+      });
+
+      if (statusCode === 302) {
+        res.writeHead(statusCode, httpHelp.headers);
+
+        console.log(body["url"]);
+
+        archive.addUrlToList(body["url"], function(){
+          console.log("ADDED TO FILE");
+        });
+
+        res.end();
+
+      } else {
+
+      }
+
+
+    });
+
+  }
 
 };

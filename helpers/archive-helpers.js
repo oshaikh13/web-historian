@@ -56,11 +56,13 @@ exports.isUrlInList = function(url, callback, customFilePath){
 
 exports.addUrlToList = function(url, callback){
 
-  fs.writeFile(this.paths.list, '\n' + url, function(err){
+
+  fs.appendFile(this.paths.list, url + '\n', function(err){
     if (err) {
       throw err;
     }
   });
+
 
   callback();
 };
