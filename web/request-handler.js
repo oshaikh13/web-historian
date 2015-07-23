@@ -34,29 +34,29 @@ exports.handleRequest = function (req, res) {
         statusCode = 500;
       }
 
-      archive.isUrlInList(body["url"], function(UrlExists){
-        if (!UrlExists){
-          statusCode = 302;
-        }
+      archive.isUrlArchived(body["url"], function(isInArchive) {
 
-        if (statusCode === 302) {
-          res.writeHead(statusCode);
+        archive.isUrlInList(body["url"], function(UrlExists){
+          if (!UrlExists && !isInArchive){
+            statusCode = 302;
+          }
 
-          archive.addUrlToList(body["url"], function(){
-          });
+          if (statusCode === 302) {
+            res.writeHead(statusCode);
 
-          res.end();
+            archive.addUrlToList(body["url"], function(){
+            });
 
-          archive.downloadUrls([body['url']]);
+            res.end();
 
-        } else {
-          res.writeHead(statusCode);
-          res.end();
+            // archive.downloadUrls([body['url']]);
 
-        } 
+          } else {
+            res.writeHead(statusCode);
+            res.end();
+          } 
+        });
       });
     });
-
   }
-
 };

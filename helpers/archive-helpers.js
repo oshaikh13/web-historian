@@ -89,33 +89,37 @@ exports.isUrlArchived = function(url, callback){
   
 };
 
-exports.downloadUrls = function(arrayLink){
+exports.downloadUrls = function(arrayLink, callback){
 
   _.each(arrayLink, function(url){
+    console.log(url);
+    if (url !== ''){
 
-    fs.open(this.paths.archivedSites + '/' + url, 'w+', function(err){
-      if (err) {
-        throw err;
-      }
-    });
-
-
-    http.get('http://' + url, function (err, res) {
-      if (err) {
-        console.error(err);
-        return;
-      }
-
-      fs.writeFile(this.paths.archivedSites + '/' + url, res.body, function(){
+      fs.open(this.paths.archivedSites + '/' + url, 'w+', function(err){
         if (err) {
+          console.log(url);
           throw err;
         }
       });
 
+      http.get('http://' + url, function (err, res) {
+        if (err) {
+          console.error(err);
+          return;
+        }
 
-    }.bind(this));
+        fs.writeFile(this.paths.archivedSites + '/' + url, res.body, function(){
+          if (err) {
+            throw err;
+          }
+        });
+      }.bind(this));
 
 
-  }.bind(this))
+    }
+
+  }.bind(this));
+
+  callback();
 
 };

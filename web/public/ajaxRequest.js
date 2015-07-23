@@ -28,9 +28,6 @@ $('.urlForm').keypress(function (e) {
       }
     });
 
-
-
-
     $('.urlName').val('');
     return false;    //<---- Add this line
   }
