@@ -19,7 +19,7 @@ exports.handleRequest = function (req, res) {
     req.on("end", function(){
 
       var statusCode = 201;
-
+      console.log(body);
       body = JSON.parse(body);
 
       archive.isUrlInList(body["url"], function(UrlExists){
@@ -29,12 +29,11 @@ exports.handleRequest = function (req, res) {
       });
 
       if (statusCode === 302) {
-        res.writeHead(statusCode, httpHelp.headers);
+        res.writeHead(statusCode);
 
         console.log(body["url"]);
 
         archive.addUrlToList(body["url"], function(){
-          console.log("ADDED TO FILE");
         });
 
         res.end();

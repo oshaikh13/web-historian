@@ -12,41 +12,6 @@
     <input class="urlName" type="input" name="url"></input>
   </form>
 
-  <script type="text/javascript">
-    $('.urlForm').keypress(function (e) {
-      if (e.which == 13) {
-        var url = $('.urlName').val();
-
-        console.log(url);
-
-        $.ajax({
-          method: "POST",
-          url: "/",
-          data: {
-            urlRequest: url
-          },
-
-          statusCode: {
-            404: function(){
-              alert('file not found');
-            },
-            302: function(){
-              alert('URL REDIERECT');
-            }
-          },
-
-          success: function(){
-            console.log('ajax complete')
-          }
-        });
-
-
-
-
-        $('.urlName').val('');
-        return false;    //<---- Add this line
-      }
-    });
-  </script>
+  <script type="text/javascript" src="ajaxRequest.js"></script>
 </body>
 </html>
