@@ -41,16 +41,23 @@ exports.readListOfUrls = function(callback, customFilePath){
 exports.isUrlInList = function(url, callback, customFilePath){
 
   var doesURLExist = false;
+  var data;
 
-  this.readListOfUrls(function(data){
-    _.each(data, function(site){
-      if (url === site){
-        doesURLExist = true;
-      }
-    });
+  this.readListOfUrls(function(urls){
+    data = urls;
   }, customFilePath);
 
+  for (var i = 0; i < data.length; i++){
+    if (data[i] === url) {
+      doesURLExist = true;
+    }
+  }
+
   callback(doesURLExist);
+
+  // console.log(doesURLExist + ": what appears in isUrlInList");
+
+  
 
 };
 
@@ -89,14 +96,20 @@ exports.downloadUrls = function(arrayLink){
     });
 
 
-    // http.get('http://www.google.com', function (err, res) {
-    //   if (err) {
-    //     console.error(err);
-    //     return;
-    //   }
-      
-    //   console.log(res.code, res.headers, res.buffer.toString());
-    // });
+    http.get('http://' + url, function (err, res) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+
+      fs.writeFile(this.paths.archivedSites + '/' + url, res.body, function(){
+        if (err) {
+          throw err;
+        }
+      });
+
+
+    }.bind(this));
 
 
   }.bind(this))

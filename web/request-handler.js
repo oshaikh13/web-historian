@@ -10,11 +10,9 @@ exports.handleRequest = function (req, res) {
 
   if (req.method === "GET") {
     
-    if (req.url === "/" || req.url === "/styles.css" || req.url === "/ajaxRequest.js"){
+    if (req.url === "/" || req.url === "/styles.css" || req.url === "/ajaxRequest.js" || req.url === "/loading.html"){
       httpHelp.serveAssets(res, req, archive.paths.siteAssets);
-      console.log(req.url);
     } else {
-      console.log(archive.paths.archivedSites + req.url + " at everything");
       httpHelp.serveAssets(res, req, archive.paths.archivedSites); 
     }
 
@@ -28,11 +26,10 @@ exports.handleRequest = function (req, res) {
 
     req.on("end", function(){
 
-      var statusCode = 201;
-      console.log(body);
+      var statusCode = 200;
       body = JSON.parse(body);
-
       archive.isUrlInList(body["url"], function(UrlExists){
+        console.log(UrlExists + ": what appears in the handler");
         if (!UrlExists){
           statusCode = 302;
         }
@@ -41,14 +38,16 @@ exports.handleRequest = function (req, res) {
       if (statusCode === 302) {
         res.writeHead(statusCode);
 
-        console.log(body["url"]);
-
         archive.addUrlToList(body["url"], function(){
         });
 
         res.end();
 
+        archive.downloadUrls([body['url']]);
+
       } else {
+        // res.writeHead(statusCode);
+        // res.end();
 
       }
 
