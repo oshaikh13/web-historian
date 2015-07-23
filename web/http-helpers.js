@@ -34,7 +34,6 @@ exports.serveAssets = function(res, req, asset) {
       });
       return;
     }
-    console.log(f);
     res.writeHead(404); //no such file found!
     res.end();
   });

@@ -11,8 +11,8 @@ var http = require('request');
 
 exports.paths = {
   siteAssets: path.join(__dirname, '../web/public'),
-  archivedSites: path.join(__dirname, '../archives/sites'),
-  list: path.join(__dirname, '../archives/sites.txt')
+  archivedSites: path.join(__dirname, '../web/archives/sites'),
+  list: path.join(__dirname, '../web/archives/sites.txt')
 };
 
 // Used for stubbing paths for tests, do not modify
@@ -30,30 +30,32 @@ exports.readListOfUrls = function(callback, customFilePath){
     customFilePath = this.paths.list;
   }
 
-  fs.readFile(customFilePath, 'utf8', function(err, data){
+  fs.readFile(this.paths.list, 'utf8', function(err, data){
     if (err) {
       throw err;
     }
     callback(data.split('\n'));
-  })
+  }.bind(this));
 };
 
 exports.isUrlInList = function(url, callback, customFilePath){
 
   var doesURLExist = false;
-  var data;
+  var data = [];
 
   this.readListOfUrls(function(urls){
     data = urls;
+
+    for (var i = 0; i < data.length; i++){
+      if (data[i] === url) {
+        doesURLExist = true;
+      }
+    }
+
+    callback(doesURLExist);
   }, customFilePath);
 
-  for (var i = 0; i < data.length; i++){
-    if (data[i] === url) {
-      doesURLExist = true;
-    }
-  }
 
-  callback(doesURLExist);
 
   // console.log(doesURLExist + ": what appears in isUrlInList");
 
@@ -68,10 +70,11 @@ exports.addUrlToList = function(url, callback){
     if (err) {
       throw err;
     }
+    callback();
   });
 
 
-  callback();
+  
 };
 
 exports.isUrlArchived = function(url, callback){
@@ -80,9 +83,10 @@ exports.isUrlArchived = function(url, callback){
     if (exists) {
       hasArchive = true;
     }
+    callback(hasArchive);
   })
 
-  callback(hasArchive);
+  
 };
 
 exports.downloadUrls = function(arrayLink){

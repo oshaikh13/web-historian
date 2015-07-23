@@ -27,31 +27,34 @@ exports.handleRequest = function (req, res) {
     req.on("end", function(){
 
       var statusCode = 200;
-      body = JSON.parse(body);
+
+      try {
+        body = JSON.parse(body);
+      } catch(err) { 
+        statusCode = 500;
+      }
+
       archive.isUrlInList(body["url"], function(UrlExists){
-        console.log(UrlExists + ": what appears in the handler");
         if (!UrlExists){
           statusCode = 302;
         }
+
+        if (statusCode === 302) {
+          res.writeHead(statusCode);
+
+          archive.addUrlToList(body["url"], function(){
+          });
+
+          res.end();
+
+          archive.downloadUrls([body['url']]);
+
+        } else {
+          res.writeHead(statusCode);
+          res.end();
+
+        } 
       });
-
-      if (statusCode === 302) {
-        res.writeHead(statusCode);
-
-        archive.addUrlToList(body["url"], function(){
-        });
-
-        res.end();
-
-        archive.downloadUrls([body['url']]);
-
-      } else {
-        // res.writeHead(statusCode);
-        // res.end();
-
-      }
-
-
     });
 
   }

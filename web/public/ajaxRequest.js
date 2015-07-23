@@ -14,6 +14,12 @@ $('.urlForm').keypress(function (e) {
         },
         302: function(){
           window.location.replace("loading.html");
+        },
+        200: function () {
+          window.location.replace(urlName);
+        },
+        500: function() {
+          alert("DAM U CRASHED MA SITE ILL REKT U m8")
         }
       },
 
