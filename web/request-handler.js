@@ -6,9 +6,19 @@ var fs = require('fs');
 
 exports.handleRequest = function (req, res) {
   var reqUrl = req.url;
+  var requestingIndex = false;
 
   if (req.method === "GET") {
-    httpHelp.serveAssets(res, req, archive.paths.siteAssets);
+    
+    if (req.url === "/" || req.url === "/styles.css" || req.url === "/ajaxRequest.js"){
+      httpHelp.serveAssets(res, req, archive.paths.siteAssets);
+      console.log(req.url);
+    } else {
+      console.log(archive.paths.archivedSites + req.url + " at everything");
+      httpHelp.serveAssets(res, req, archive.paths.archivedSites); 
+    }
+
+
   } else if (req.method === "POST") {
 
     var body = "";
